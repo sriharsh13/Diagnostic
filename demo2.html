@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Utilization Widget</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    #chat-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #chat-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    #chat-box {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 320px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      padding: 15px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 999;
+    }
+
+    #chat-box.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #chat-box header {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #close-btn {
+      cursor: pointer;
+      color: red;
+      font-size: 20px;
+      line-height: 1;
+      padding: 0 5px;
+      border-radius: 5px;
+      transition: background-color 0.2s ease;
+    }
+
+    #close-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .gauge-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .gauge {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
+      background: lightgray;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    .gauge br {
+      display: none;
+    }
+
+    .gauge span {
+      display: block;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .module-info {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* Diagnostic Modal Styles */
+    .diagnostic-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .diagnostic-modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .diagnostic-modal-content {
+      background-color: #f3f4f6;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      max-width: 98%;
+      width: 1400px;
+      max-height: 95%;
+      height: 800px;
+      overflow-y: auto;
+      position: relative;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .diagnostic-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #fff;
+      background-color: rgba(0,0,0,0.3);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      z-index: 2001;
+    }
+
+    .diagnostic-modal-close:hover {
+      background-color: rgba(0,0,0,0.5);
+      transform: scale(1.1);
+    }
+
+    /* Dashboard Styles */
+    .dashboard-nav {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 0.5rem;
+    }
+
+    .dashboard-nav h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .nav-tabs {
+      display: flex;
+      background: #34495e;
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .nav-tab {
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      background: transparent;
+      color: #bdc3c7;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .nav-tab:hover {
+      background: #4a5f7a;
+      color: white;
+    }
+
+    .nav-tab.active {
+      background: #3498db;
+      color: white;
+    }
+
+    /* Circular Gauge Styles */
+    .gauges-section {
+      background: white;
+      border: 2px solid #2c5aa0;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .gauges-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .circular-gauge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 150px;
+    }
+
+    .gauge-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+
+    .gauge-label {
+      background: #2c5aa0;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+      font-size: 0.875rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    /* Tab Content */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .content-section {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .main-dashboard-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      min-height: 400px;
+    }
+
+    .module-status-section {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      flex: 0 0 400px;
+      min-width: 400px;
+    }
+
+    .module-status-header {
+      background: #e9ecef;
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .status-table th,
+    .status-table td {
+      border: 1px solid #dee2e6;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    .status-table th {
+      background: #f8f9fa;
+      font-weight: bold;
+    }
+
+    .status-running {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .status-stopped {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .chart-section {
+      flex: 1;
+      min-width: 500px;
+    }
+
+    .chart-legend {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .chart-legend span {
+      margin-right: 20px;
+      font-size: 14px;
+    }
+
+    #systemChart {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+      width: 100%;
+      height: 300px;
+    }
+
+    .chart-time-labels {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    /* Network and Server specific styles */
+    .network-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .network-table-section {
+      flex: 1;
+      min-width: 400px;
+    }
+
+    .network-chart-section {
+      flex: 0 0 300px;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pie-chart-container {
+      position: relative;
+      width: 250px;
+      height: 250px;
+      margin-bottom: 1rem;
+    }
+
+    .pie-chart-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+    }
+
+    .server-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .server-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .info-card {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+    }
+
+    .info-card h3 {
+      margin: 0 0 1rem 0;
+      color: #2c3e50;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    .info-value {
+      color: #2c3e50;
+    }
+
+    @media (max-width: 1200px) {
+      .diagnostic-modal-content {
+        width: 95%;
+        height: 90%;
+        padding: 1.5rem;
+      }
+      
+      .main-dashboard-content,
+      .network-content {
+        flex-direction: column;
+      }
+      
+      .module-status-section,
+      .network-table-section,
+      .network-chart-section {
+        flex: none;
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .chart-section {
+        min-width: auto;
+        width: 100%;
+      }
+
+      .server-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .diagnostic-modal-content {
+        padding: 1rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+        height: calc(100% - 2rem);
+      }
+      
+      .gauges-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .nav-tabs {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button id="chat-icon">💬</button>
+
+<div id="chat-box">
+  <header>
+    System Utilization
+    <span id="close-btn">&times;</span>
+  </header>
+  <div class="gauge-container">
+    <div class="gauge" id="ram">RAM<span></span></div>
+    <div class="gauge" id="storage">Storage<span></span></div>
+    <div class="gauge" id="temp">Temp<span></span></div>
+  </div>
+  <div class="module-info">
+    <strong>Additional Module Info:</strong><br>
+    Module A: Active<br>
+    Module B: Idle<br>
+    Module C: Updating...
+  </div>
+  <button id="diagnostic-btn" style="margin-top: 15px; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">Open Diagnostic Module</button>
+</div>
+
+<!-- Diagnostic Modal -->
+<div id="diagnostic-modal" class="diagnostic-modal-overlay">
+  <div class="diagnostic-modal-content">
+    <div class="diagnostic-modal-close" id="diagnostic-close">&times;</div>
+    
+    <div class="w-full max-w-full mx-auto">
+      <div class="dashboard-nav">
+        <h1>Screen - C:/smartComm/VisionMax/screens/userDiagnostic Module Or Widget/Screen</h1>
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+          <button class="nav-tab" data-tab="app-info">Application Info</button>
+          <button class="nav-tab" data-tab="addition-module">Addition Module Information</button>
+          <button class="nav-tab" data-tab="network-info">Network Information</button>
+          <button class="nav-tab" data-tab="server-infra">Server Infra</button>
+        </div>
+      </div>
+
+      <div id="tab-content">
+        <div id="dashboard" class="tab-pane active">
+          <div class="gauges-section">
+            <div class="gauges-container">
+              <div class="circular-gauge">
+                <div class="gauge-circle" id="cpu-gauge">
+                  80.00
+                </div>
+                <div class="gauge-label">CPU Utilization</div>
+              </div>
+              <div class="circular-gauge">
+                <div class="gauge-circle" id="ram-gauge">
+                  76.00
+                </div>
+                <div class="gauge-label">RAM Utilization</div>
+              </div>
+              <div class="circular-gauge">
+                <div class="gauge-circle" id="storage-gauge">
+                  46.00
+                </div>
+                <div class="gauge-label">STORAGE</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="main-dashboard-content">
+              <!-- Module Status Table -->
+              <div class="module-status-section">
+                <div class="module-status-header">
+                  Module Active
+                </div>
+                <table class="status-table">
+                  <thead>
+                    <tr>
+                      <th>modules Information</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Module A</td>
+                      <td><span class="status-running">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td>Module B</td>
+                      <td><span class="status-stopped">Idle</span></td>
+                    </tr>
+                    <tr>
+                      <td>Module C</td>
+                      <td><span class="status-running">Updating...</span></td>
+                    </tr>
+                    <tr>
+                      <td>Module D</td>
+                      <td><span class="status-running">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td>Module E</td>
+                      <td><span class="status-stopped">Stopped</span></td>
+                    </tr>
+                    <tr>
+                      <td>Module F</td>
+                      <td><span class="status-running">Running</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Chart Visualization -->
+              <div class="chart-section">
+                <div class="chart-legend">
+                  <span style="color: #007bff;">■ tagName1</span>
+                  <span style="color: #28a745;">■ tagName2</span>
+                  <span style="color: #ffc107;">■ tagName3</span>
+                </div>
+                <canvas id="systemChart"></canvas>
+                <div class="chart-time-labels">
+                  Jan 01 0001 | 00:00:30 | 00:01 | 00:01:30 | 00:02
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="app-info" class="tab-pane">
+          <div class="content-section">
+            <h2 class="text-2xl font-semibold mb-4">Application Information</h2>
+            <table class="status-table">
+              <thead>
+                <tr>
+                  <th>Application</th>
+                  <th>Process ID</th>
+                  <th>Ram Utilization</th>
+                  <th>Cpu Utilization</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Application A</td>
+                  <td>1234</td>
+                  <td>25%</td>
+                  <td>15%</td>
+                </tr>
+                <tr>
+                  <td>Application B</td>
+                  <td>5678</td>
+                  <td>10%</td>
+                  <td>5%</td>
+                </tr>
+                <tr>
+                  <td>L1-messagebroker.exe</td>
+                  <td>-</td>
+                  <td>0%</td>
+                  <td>0%</td>
+                </tr>
+                <tr>
+                  <td>L2-messagebroker.exe</td>
+                  <td>9101</td>
+                  <td>30%</td>
+                  <td>20%</td>
+                </tr>
+                <tr>
+                  <td>NodeC.exe</td>
+                  <td>-</td>
+                  <td>0%</td>
+                  <td>0%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="addition-module" class="tab-pane">
+          <div class="content-section">
+            <h2 class="text-2xl font-semibold mb-6">Additional Module Information</h2>
+            
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold mb-3">TagDB</h3>
+              <table class="status-table">
+                <thead>
+                  <tr>
+                    <th>Module</th>
+                    <th>Condition</th>
+                    <th>Percentage</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Storage</td>
+                    <td>good</td>
+                    <td><span class="status-running">75</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Storage</td>
+                    <td>Bad</td>
+                    <td><span class="status-running">46</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>TagDB-Writer.exe</td>
+                    <td>bad</td>
+                    <td><span class="status-stopped">63</span></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-semibold mb-3">HistDB</h3>
+              <table class="status-table">
+                <thead>
+                  <tr>
+                    <th>Module</th>
+                    <th>Condition</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Storage</td>
+                    <td>good</td>
+                    <td><span class="status-running">46</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>HistDB-Archiver.exe</td>
+                    <td>bad</td>
+                    <td><span class="status-running">63</span></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>HistDB-Cleanup.exe</td>
+                    <td>good</td>
+                    <td><span class="status-running">45</span></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="network-info" class="tab-pane">
+          <div class="content-section">
+            <h2 class="text-2xl font-semibold mb-4">Network Information</h2>
+            <div class="network-content">
+              <div class="network-table-section">
+                <h3 class="text-lg font-semibold mb-3">Network Interfaces</h3>
+                <table class="status-table mb-6">
+                  <thead>
+                    <tr>
+                      <th>Interface</th>
+                      <th>IP Address</th>
+                      <th>Status</th>
+                      <th>Speed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ethernet 1</td>
+                      <td>192.168.1.100</td>
+                      <td><span class="status-running">Connected</span></td>
+                      <td>1 Gbps</td>
+                    </tr>
+                    <tr>
+                      <td>Wi-Fi</td>
+                      <td>192.168.1.101</td>
+                      <td><span class="status-running">Connected</span></td>
+                      <td>300 Mbps</td>
+                    </tr>
+                    <tr>
+                      <td>Ethernet 2</td>
+                      <td>-</td>
+                      <td><span class="status-stopped">Disconnected</span></td>
+                      <td>-</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h3 class="text-lg font-semibold mb-3">Connection Details</h3>
+                <table class="status-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Gateway</td>
+                      <td>192.168.1.1</td>
+                    </tr>
+                    <tr>
+                      <td>DNS Primary</td>
+                      <td>8.8.8.8</td>
+                    </tr>
+                    <tr>
+                      <td>DNS Secondary</td>
+                      <td>8.8.4.4</td>
+                    </tr>
+                    <tr>
+                      <td>Subnet Mask</td>
+                      <td>255.255.255.0</td>
+                    </tr>
+                    <tr>
+                      <td>MAC Address</td>
+                      <td>00:1B:44:11:3A:B7</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="network-chart-section">
+                <h3 class="text-lg font-semibold mb-3 text-center">Network Performance</h3>
+                <div class="pie-chart-container">
+                  <canvas id="networkPieChart" width="250" height="250"></canvas>
+                </div>
+                <div class="pie-chart-legend">
+                  <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <span>Download: 85 Mbps</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>Upload: 25 Mbps</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                    <span>Ping: 15 ms</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-color" style="background-color: #27ae60;"></div>
+                    <span>Available: 190 Mbps</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="server-infra" class="tab-pane">
+          <div class="content-section">
+            <h2 class="text-2xl font-semibold mb-4">Server Infrastructure</h2>
+            <div class="server-content">
+              <div class="server-info-grid">
+                <div class="info-card">
+                  <h3>System Information</h3>
+                  <div class="info-item">
+                    <span class="info-label">Operating System:</span>
+                    <span class="info-value">Windows Server 2019</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Hostname:</span>
+                    <span class="info-value">SMARTCOMM-SRV01</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Domain:</span>
+                    <span class="info-value">smartcomm.local</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Uptime:</span>
+                    <span class="info-value">15 days, 4 hours</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Last Boot:</span>
+                    <span class="info-value">2024-05-20 08:30:00</span>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <h3>Hardware Information</h3>
+                  <div class="info-item">
+                    <span class="info-label">Processor:</span>
+                    <span class="info-value">Intel Xeon E5-2680 v4</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Cores:</span>
+                    <span class="info-value">14 cores / 28 threads</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Total RAM:</span>
+                    <span class="info-value">64 GB DDR4</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Available RAM:</span>
+                    <span class="info-value">15.4 GB</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Storage:</span>
+                    <span class="info-value">2TB SSD + 4TB HDD</span>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <h3>Service Status</h3>
+                  <div class="info-item">
+                    <span class="info-label">IIS Web Server:</span>
+                    <span class="info-value status-running">Running</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">SQL Server:</span>
+                    <span class="info-value status-running">Running</span></div>
+                  <div class="info-item">
+                    <span class="info-label">Message Broker:</span>
+                    <span class="info-value status-running">Running</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Backup Service:</span>
+                    <span class="info-value status-stopped">Stopped</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Antivirus:</span>
+                    <span class="info-value status-running">Running</span>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <h3>Performance Metrics</h3>
+                  <div class="info-item">
+                    <span class="info-label">CPU Temperature:</span>
+                    <span class="info-value">65°C</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">System Load:</span>
+                    <span class="info-value">Medium</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Active Sessions:</span>
+                    <span class="info-value">12</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Network Throughput:</span>
+                    <span class="info-value">150 Mbps</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Disk I/O:</span>
+                    <span class="info-value">Normal</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-card" style="margin-top: 2rem;">
+                <h3>Security & Monitoring</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="info-item">
+                    <span class="info-label">Firewall Status:</span>
+                    <span class="info-value status-running">Active</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Last Security Scan:</span>
+                    <span class="info-value">2024-06-05 14:30:00</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Intrusion Detection:</span>
+                    <span class="info-value status-running">Enabled</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Monitoring Agent:</span>
+                    <span class="info-value status-running">Active</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Backup Status:</span>
+                    <span class="info-value">Last: 2024-06-06 02:00:00</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">SSL Certificate:</span>
+                    <span class="info-value">Valid (expires: 2025-03-15)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Chat widget functionality
+  const chatIcon = document.getElementById('chat-icon');
+  const chatBox = document.getElementById('chat-box');
+  const closeBtn = document.getElementById('close-btn');
+  const diagnosticBtn = document.getElementById('diagnostic-btn');
+  const diagnosticModal = document.getElementById('diagnostic-modal');
+  const diagnosticClose = document.getElementById('diagnostic-close');
+
+  // Toggle chat box
+  chatIcon.addEventListener('click', () => {
+    if (chatBox.style.display === 'none' || !chatBox.style.display) {
+      chatBox.style.display = 'block';
+      setTimeout(() => chatBox.classList.add('show'), 10);
+    } else {
+      chatBox.classList.remove('show');
+      setTimeout(() => chatBox.style.display = 'none', 300);
+    }
+  });
+
+  // Close chat box
+  closeBtn.addEventListener('click', () => {
+    chatBox.classList.remove('show');
+    setTimeout(() => chatBox.style.display = 'none', 300);
+  });
+
+  // Open diagnostic modal
+  diagnosticBtn.addEventListener('click', () => {
+    diagnosticModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  });
+
+  // Close diagnostic modal
+  diagnosticClose.addEventListener('click', () => {
+    diagnosticModal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+  });
+
+  // Close modal when clicking overlay
+  diagnosticModal.addEventListener('click', (e) => {
+    if (e.target === diagnosticModal) {
+      diagnosticModal.classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+  });
+
+  // Tab functionality
+  const navTabs = document.querySelectorAll('.nav-tab');
+  const tabPanes = document.querySelectorAll('.tab-pane');
+
+  navTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and panes
+      navTabs.forEach(t => t.classList.remove('active'));
+      tabPanes.forEach(p => p.classList.remove('active'));
+      
+      // Add active class to clicked tab and corresponding pane
+      tab.classList.add('active');
+      document.getElementById(targetTab).classList.add('active');
+    });
+  });
+
+  // Simulate real-time data updates
+  function updateSystemData() {
+    // Update chat box gauges
+    const ramGauge = document.getElementById('ram');
+    const storageGauge = document.getElementById('storage');
+    const tempGauge = document.getElementById('temp');
+    
+    const ramValue = Math.floor(Math.random() * 40 + 60);
+    const storageValue = Math.floor(Math.random() * 30 + 40);
+    const tempValue = Math.floor(Math.random() * 20 + 60);
+    
+    ramGauge.innerHTML = `RAM<span>${ramValue}%</span>`;
+    ramGauge.style.background = `conic-gradient(#007bff 0deg ${ramValue * 3.6}deg, lightgray ${ramValue * 3.6}deg 360deg)`;
+    
+    storageGauge.innerHTML = `Storage<span>${storageValue}%</span>`;
+    storageGauge.style.background = `conic-gradient(#28a745 0deg ${storageValue * 3.6}deg, lightgray ${storageValue * 3.6}deg 360deg)`;
+    
+    tempGauge.innerHTML = `Temp<span>${tempValue}°C</span>`;
+    tempGauge.style.background = `conic-gradient(#ffc107 0deg ${(tempValue - 40) * 6}deg, lightgray ${(tempValue - 40) * 6}deg 360deg)`;
+    
+    // Update dashboard gauges
+    const cpuGauge = document.getElementById('cpu-gauge');
+    const ramDashGauge = document.getElementById('ram-gauge');
+    const storageDashGauge = document.getElementById('storage-gauge');
+    
+    const cpuValue = Math.floor(Math.random() * 30 + 70);
+    const ramDashValue = Math.floor(Math.random() * 20 + 70);
+    const storageDashValue = Math.floor(Math.random() * 20 + 40);
+    
+    if (cpuGauge) cpuGauge.textContent = cpuValue.toFixed(2);
+    if (ramDashGauge) ramDashGauge.textContent = ramDashValue.toFixed(2);
+    if (storageDashGauge) storageDashGauge.textContent = storageDashValue.toFixed(2);
+    
+    // Color coding for dashboard gauges
+    if (cpuGauge) {
+      cpuGauge.style.background = cpuValue > 80 ? '#e74c3c' : cpuValue > 60 ? '#f39c12' : '#27ae60';
+      cpuGauge.style.color = 'white';
+    }
+    if (ramDashGauge) {
+      ramDashGauge.style.background = ramDashValue > 80 ? '#e74c3c' : ramDashValue > 60 ? '#f39c12' : '#27ae60';
+      ramDashGauge.style.color = 'white';
+    }
+    if (storageDashGauge) {
+      storageDashGauge.style.background = storageDashValue > 80 ? '#e74c3c' : storageDashValue > 60 ? '#f39c12' : '#27ae60';
+      storageDashGauge.style.color = 'white';
+    }
+  }
+
+  // Initialize chart functionality
+  function initCharts() {
+    // System Chart
+    const systemCanvas = document.getElementById('systemChart');
+    if (systemCanvas) {
+      const ctx = systemCanvas.getContext('2d');
+      const width = systemCanvas.width = systemCanvas.offsetWidth;
+      const height = systemCanvas.height = systemCanvas.offsetHeight;
+      
+      // Simple line chart simulation
+      function drawChart() {
+        ctx.clearRect(0, 0, width, height);
+        
+        // Grid
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 10; i++) {
+          const y = (height / 10) * i;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+        for (let i = 0; i <= 20; i++) {
+          const x = (width / 20) * i;
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        
+        // Sample data lines
+        const colors = ['#007bff', '#28a745', '#ffc107'];
+        const dataPoints = 50;
+        
+        colors.forEach((color, index) => {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          
+          for (let i = 0; i < dataPoints; i++) {
+            const x = (width / (dataPoints - 1)) * i;
+            const baseValue = 50 + Math.sin(i * 0.2 + index) * 30;
+            const noise = Math.random() * 20 - 10;
+            const y = height - ((baseValue + noise) / 100 * height);
+            
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+          ctx.stroke();
+        });
+      }
+      
+      drawChart();
+      setInterval(drawChart, 2000);
+    }
+    
+    // Network Pie Chart
+    const networkCanvas = document.getElementById('networkPieChart');
+    if (networkCanvas) {
+      const ctx = networkCanvas.getContext('2d');
+      const centerX = 125;
+      const centerY = 125;
+      const radius = 100;
+      
+      function drawPieChart() {
+        ctx.clearRect(0, 0, 250, 250);
+        
+        const data = [
+          { label: 'Download', value: 85, color: '#3498db' },
+          { label: 'Upload', value: 25, color: '#e74c3c' },
+          { label: 'Ping', value: 15, color: '#f39c12' },
+          { label: 'Available', value: 190, color: '#27ae60' }
+        ];
+        
+        const total = data.reduce((sum, item) => sum + item.value, 0);
+        let currentAngle = -Math.PI / 2;
+        
+        data.forEach(item => {
+          const sliceAngle = (item.value / total) * 2 * Math.PI;
+          
+          ctx.fillStyle = item.color;
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+          ctx.closePath();
+          ctx.fill();
+          
+          currentAngle += sliceAngle;
+        });
+        
+        // Center circle
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Network', centerX, centerY - 5);
+        ctx.fillText('Status', centerX, centerY + 10);
+      }
+      
+      drawPieChart();
+    }
+  }
+
+  // Initialize everything
+  document.addEventListener('DOMContentLoaded', () => {
+    updateSystemData();
+    initCharts();
+    
+    // Update data every 3 seconds
+    setInterval(updateSystemData, 3000);
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (diagnosticModal.classList.contains('show')) {
+        diagnosticModal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      } else if (chatBox.classList.contains('show')) {
+        chatBox.classList.remove('show');
+        setTimeout(() => chatBox.style.display = 'none', 300);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
