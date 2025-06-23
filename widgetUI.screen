@@ -1,0 +1,1235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>widgetUI</class>
+ <widget class="LTWidget" name="widgetUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1276</width>
+    <height>818</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Screen</string>
+  </property>
+  <property name="internalUse">
+   <string>1,1</string>
+  </property>
+  <widget class="LTTabWidget" name="tabwidget">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>3</y>
+     <width>1270</width>
+     <height>810</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="LTWidget" name="tab_1">
+    <property name="internalUse">
+     <string>1,1</string>
+    </property>
+    <property name="backgroundColor">
+     <color>
+      <red>240</red>
+      <green>240</green>
+      <blue>240</blue>
+     </color>
+    </property>
+    <attribute name="title">
+     <string notr="true">Dashboard</string>
+    </attribute>
+    <widget class="LTTableWidget" name="tablewidget_Trip_2">
+     <property name="geometry">
+      <rect>
+       <x>690</x>
+       <y>70</y>
+       <width>561</width>
+       <height>300</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>Modules Information</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>890</x>
+       <y>20</y>
+       <width>130</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Module Active&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="TrendStatic" name="trendstatic">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>390</y>
+       <width>1230</width>
+       <height>370</height>
+      </rect>
+     </property>
+     <property name="tagNameList" stdset="0">
+      <stringlist notr="true">
+       <string>Obj1.Server_Infra.ram</string>
+       <string>Obj1.Server_Infra.cpu</string>
+       <string>Obj1.Server_Infra.storage</string>
+      </stringlist>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="cpu_label_1">
+     <property name="geometry">
+      <rect>
+       <x>87</x>
+       <y>290</y>
+       <width>91</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif Collection</family>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#005c8e;&quot;&gt;CPU Utilization&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="backgroundColor">
+      <color>
+       <red>255</red>
+       <green>255</green>
+       <blue>255</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="cpu_label_3">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>290</y>
+       <width>70</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif Collection</family>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#005c8e;&quot;&gt;Storage&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="backgroundColor">
+      <color>
+       <red>255</red>
+       <green>255</green>
+       <blue>255</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="cpu_label_2">
+     <property name="geometry">
+      <rect>
+       <x>298</x>
+       <y>290</y>
+       <width>90</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif Collection</family>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#005c8e;&quot;&gt;RAM Utilization&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="backgroundColor">
+      <color>
+       <red>255</red>
+       <green>255</green>
+       <blue>255</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_29">
+     <property name="geometry">
+      <rect>
+       <x>685</x>
+       <y>65</y>
+       <width>570</width>
+       <height>310</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>70</y>
+       <width>631</width>
+       <height>211</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="ctwgPieChartDonut" name="ctwgpiechartdonut_4">
+        <property name="tagName" stdset="0">
+         <string notr="true">Obj1.Server_Infra.cpu</string>
+        </property>
+        <property name="value" stdset="0">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="ctwgPieChartDonut" name="ctwgpiechartdonut_5">
+        <property name="tagName" stdset="0">
+         <string notr="true">Obj1.Server_Infra.ram</string>
+        </property>
+        <property name="value" stdset="0">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="ctwgPieChartDonut" name="ctwgpiechartdonut_6">
+        <property name="tagName" stdset="0">
+         <string notr="true">Obj1.Server_Infra.storage</string>
+        </property>
+        <property name="value" stdset="0">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="LTPushButton" name="Refresh_mod_active">
+     <property name="geometry">
+      <rect>
+       <x>1060</x>
+       <y>20</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <zorder>label</zorder>
+    <zorder>trendstatic</zorder>
+    <zorder>cpu_label_1</zorder>
+    <zorder>cpu_label_3</zorder>
+    <zorder>cpu_label_2</zorder>
+    <zorder>label_29</zorder>
+    <zorder>tablewidget_Trip_2</zorder>
+    <zorder>layoutWidget</zorder>
+    <zorder>Refresh_mod_active</zorder>
+   </widget>
+   <widget class="LTWidget" name="tab_2">
+    <property name="internalUse">
+     <string>1,1</string>
+    </property>
+    <property name="backgroundColor">
+     <color>
+      <red>240</red>
+      <green>240</green>
+      <blue>240</blue>
+     </color>
+    </property>
+    <attribute name="title">
+     <string notr="true">Application Info</string>
+    </attribute>
+    <widget class="LTTableWidget" name="tablewidget_Maintenance_4">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>100</y>
+       <width>780</width>
+       <height>420</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>Time</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>PID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Application Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Memory Utilization in (MB)</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cpu Utilization % </string>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>90</y>
+       <width>800</width>
+       <height>440</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>30</y>
+       <width>241</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Application Information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTPushButton" name="Refresh_appinfo">
+     <property name="geometry">
+      <rect>
+       <x>861</x>
+       <y>30</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <zorder>label_10</zorder>
+    <zorder>tablewidget_Maintenance_4</zorder>
+    <zorder>label_9</zorder>
+    <zorder>Refresh_appinfo</zorder>
+   </widget>
+   <widget class="LTWidget" name="tab_3">
+    <property name="internalUse">
+     <string>1,1</string>
+    </property>
+    <property name="backgroundColor">
+     <color>
+      <red>240</red>
+      <green>240</green>
+      <blue>240</blue>
+     </color>
+    </property>
+    <attribute name="title">
+     <string notr="true">Addition Module Information</string>
+    </attribute>
+    <widget class="LTTableWidget" name="tablewidget_Maintenance_2">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>100</y>
+       <width>790</width>
+       <height>410</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>TimeStamp</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Start Live Count</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>251</x>
+       <y>90</y>
+       <width>810</width>
+       <height>430</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>30</y>
+       <width>241</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Start Live Count&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTPushButton" name="Refresh_startlive">
+     <property name="geometry">
+      <rect>
+       <x>870</x>
+       <y>30</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <zorder>label_11</zorder>
+    <zorder>tablewidget_Maintenance_2</zorder>
+    <zorder>label_8</zorder>
+    <zorder>Refresh_startlive</zorder>
+   </widget>
+   <widget class="LTWidget" name="tab">
+    <property name="internalUse">
+     <string>1,1</string>
+    </property>
+    <attribute name="title">
+     <string notr="true">Network Info</string>
+    </attribute>
+    <widget class="LTTableWidget" name="tablewidget_Maintenance_10">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>300</y>
+       <width>600</width>
+       <height>450</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>Active Interfaces</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Connection Status</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>66</y>
+       <width>130</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Network Statistics&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_22">
+     <property name="geometry">
+      <rect>
+       <x>4</x>
+       <y>31</y>
+       <width>1250</width>
+       <height>250</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>365</x>
+       <y>295</y>
+       <width>610</width>
+       <height>460</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTPushButton" name="Refresh_network_stat">
+     <property name="geometry">
+      <rect>
+       <x>960</x>
+       <y>70</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>40</y>
+       <width>1230</width>
+       <height>230</height>
+      </rect>
+     </property>
+     <property name="backgroundColor">
+      <color>
+       <red>248</red>
+       <green>248</green>
+       <blue>248</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_84">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>156</y>
+       <width>281</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #77afe3;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color>
+       <red>119</red>
+       <green>175</green>
+       <blue>227</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_86">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>150</y>
+       <width>281</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #77afe3;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color>
+       <red>119</red>
+       <green>175</green>
+       <blue>227</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="tagProperties1" name="tagproperties1_38">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>130</y>
+       <width>111</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="tagName" stdset="0">
+      <string notr="true">Obj1.Network_Info.upload_speed_mbps</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>870</x>
+       <y>174</y>
+       <width>80</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Total Speed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>174</y>
+       <width>120</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Download Speed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="tagProperties1" name="tagproperties1_39">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>130</y>
+       <width>121</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="tagName" stdset="0">
+      <string notr="true"> </string>
+     </property>
+    </widget>
+    <widget class="tagProperties1" name="tagproperties1_40">
+     <property name="geometry">
+      <rect>
+       <x>990</x>
+       <y>130</y>
+       <width>131</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="tagName" stdset="0">
+      <string notr="true">Obj1.Network_Info.total_speed_mbps</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_85">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>150</y>
+       <width>281</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #77afe3;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color>
+       <red>119</red>
+       <green>175</green>
+       <blue>227</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>180</y>
+       <width>121</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Upload Speed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <zorder>label_22</zorder>
+    <zorder>label_2</zorder>
+    <zorder>label_23</zorder>
+    <zorder>label_19</zorder>
+    <zorder>tablewidget_Maintenance_10</zorder>
+    <zorder>Refresh_network_stat</zorder>
+    <zorder>label_84</zorder>
+    <zorder>label_86</zorder>
+    <zorder>tagproperties1_38</zorder>
+    <zorder>label_85</zorder>
+    <zorder>label_12</zorder>
+    <zorder>label_13</zorder>
+    <zorder>tagproperties1_39</zorder>
+    <zorder>tagproperties1_40</zorder>
+    <zorder>label_14</zorder>
+   </widget>
+   <widget class="LTWidget" name="Tab_5">
+    <property name="internalUse">
+     <string>1,1</string>
+    </property>
+    <attribute name="title">
+     <string notr="true">Server Infra</string>
+    </attribute>
+    <widget class="LTTableWidget" name="tablewidget_Maintenance_6">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>160</y>
+       <width>610</width>
+       <height>500</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>Cpu per core</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cpu logical cores</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cpu physical cores</string>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cpu cores being used</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTTableWidget" name="tablewidget_Maintenance_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>610</width>
+       <height>500</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(248, 248, 248);
+alternate-background-color: rgb(222, 222, 222);</string>
+     </property>
+     <column>
+      <property name="text">
+       <string>Drive Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Total Space (GB)</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Used Space (GB)</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Usage (%)</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="LTLabel" name="label_27">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>80</y>
+       <width>620</width>
+       <height>590</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_24">
+     <property name="geometry">
+      <rect>
+       <x>510</x>
+       <y>10</y>
+       <width>241</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Server Infrastructure&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_28">
+     <property name="geometry">
+      <rect>
+       <x>635</x>
+       <y>80</y>
+       <width>620</width>
+       <height>590</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: #f25c5c;
+border-width :1px;
+border-style:solid;
+border-radius:8px;
+	background-color: rgb(255, 255, 255);
+</string>
+     </property>
+     <property name="shadowEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="shadowRadius">
+      <number>5</number>
+     </property>
+     <property name="shadowOffset">
+      <pointf>
+       <x>2.000000000000000</x>
+       <y>2.000000000000000</y>
+      </pointf>
+     </property>
+     <property name="shadowColor">
+      <color alpha="180">
+       <red>242</red>
+       <green>92</green>
+       <blue>92</blue>
+      </color>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_25">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>110</y>
+       <width>241</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Drive Information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTLabel" name="label_26">
+     <property name="geometry">
+      <rect>
+       <x>830</x>
+       <y>110</y>
+       <width>241</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Cores Information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="LTPushButton" name="Refresh_server_infra">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>40</y>
+       <width>181</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+    <zorder>label_28</zorder>
+    <zorder>label_27</zorder>
+    <zorder>tablewidget_Maintenance_6</zorder>
+    <zorder>tablewidget_Maintenance_8</zorder>
+    <zorder>label_24</zorder>
+    <zorder>label_25</zorder>
+    <zorder>label_26</zorder>
+    <zorder>Refresh_server_infra</zorder>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LTLabel</class>
+   <extends>QLabel</extends>
+   <header>ltlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LTPushButton</class>
+   <extends>QPushButton</extends>
+   <header>ltpushbutton.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LTTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>lttablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LTTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>lttabwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LTWidget</class>
+   <extends>QWidget</extends>
+   <header>ltwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TrendStatic</class>
+   <extends>LTWidget</extends>
+   <header>TrendStatic</header>
+  </customwidget>
+  <customwidget>
+   <class>ctwgPieChartDonut</class>
+   <extends>LTWidget</extends>
+   <header>ctwgPieChartDonut</header>
+  </customwidget>
+  <customwidget>
+   <class>tagProperties1</class>
+   <extends>LTWidget</extends>
+   <header>tagProperties1</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

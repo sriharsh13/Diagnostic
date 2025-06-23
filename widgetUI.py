@@ -1,0 +1,275 @@
+from Widget import *
+import ui_widgetUI
+reload(ui_widgetUI)
+from ui_widgetUI import Ui_widgetUI
+
+import sys
+import os
+import re
+import psutil
+import time
+import subprocess
+import platform
+import shutil
+import string
+from datetime import datetime
+
+class widgetUI(Widget):
+	def __init__(self, parent=None):
+		super(widgetUI, self).__init__(parent)
+		self.ui=Ui_widgetUI()
+		self.ui.setupUi(self)
+	@pyqtSlot()
+	def on_Refresh_appinfo_clicked( self ):
+		self.display_appinfo()
+
+	@pyqtSlot()
+	def on_Refresh_mod_active_clicked( self ):
+		self.display_dashboard()
+
+	@pyqtSlot()
+	def on_Refresh_network_stat_clicked( self ):
+		self.display_network()
+
+	@pyqtSlot()
+	def on_Refresh_server_infra_clicked( self ):
+		self.display_server_infra_1()
+		self.display_server_infra_2()
+
+	@pyqtSlot()
+	def on_Refresh_startlive_clicked( self ):
+		self.display_additional_module()
+
+	@pyqtSlot(int)
+	def on_tabwidget_currentChanged( self, index ):
+		if index == 0:
+			self.display_dashboard()
+		if index == 1:
+			self.display_appinfo()
+		if index == 2:
+			self.display_additional_module()
+		if index == 4:
+			self.display_server_infra_1()
+			self.display_server_infra_2()
+		if index == 3:
+			self.display_network()
+			
+
+	def display_additional_module(self):
+		try:
+			self.ui.tablewidget_Maintenance_2.setRowCount(0)
+			
+			# Get LTStartLiveCount data from tags
+			try:
+				ltstart_timestamp = create_string_buffer(1000)
+				ltstart_value = create_string_buffer(1000)
+				getTagData("Obj1.Additional_Module_Information.ltstart_latest_timestamp", ltstart_timestamp,
+						"Obj1.Additional_Module_Information.ltstart_latest_value", ltstart_value)
+				ltstart_timestamp = ltstart_timestamp.value.decode()
+				ltstart_value = ltstart_value.value.decode()
+			except Exception:
+				ltstart_value = ""
+				ltstart_timestamp = ""
+			
+			# Only add row if we have data
+			if ltstart_timestamp and ltstart_value:
+				row = self.ui.tablewidget_Maintenance_2.rowCount()
+				self.ui.tablewidget_Maintenance_2.setRowCount(row + 1)
+				
+				# Set table items for 2 columns only
+				self.ui.tablewidget_Maintenance_2.setItem(row, 0, QtWidgets.QTableWidgetItem(ltstart_timestamp))  # TimeStamp
+				self.ui.tablewidget_Maintenance_2.setItem(row, 1, QtWidgets.QTableWidgetItem(ltstart_value))      # Start Live Count
+		
+		except Exception as e:
+			print(f"Error populating LTStartLiveCount table: {e}")
+
+	def display_appinfo(self):
+				"""Populate tablewidget_Maintenance_4 with application inform7ation"""
+				try:
+					# Clear existing rows
+					self.ui.tablewidget_Maintenance_4.setRowCount(0)
+					
+					# Get application data from arrays (assuming these are populated from your existing code)
+					app_names = []
+					app_pids = []
+					app_statuses = []
+					app_memory = []
+					app_cpu = []
+					GetTagArrayData("Obj1.Application_Info.application_name", app_names)
+					GetTagArrayData("Obj1.Application_Info.application_id", app_pids)
+					GetTagArrayData("Obj1.Application_Info.application_status", app_statuses)
+					GetTagArrayData("Obj1.Application_Info.application_ram", app_memory)
+					GetTagArrayData("Obj1.Application_Info.application_cpu", app_cpu)
+					
+					if len(app_names) > 0:
+						for index in range(len(app_names)):
+							app_name = app_names[index]
+							app_pid = str(app_pids[index])
+							app_status = app_statuses[index]
+							app_mem = str(app_memory[index])
+							app_cpu_usage = str(app_cpu[index])
+							
+							# Check if item already exists in table
+							items = self.ui.tablewidget_Maintenance_4.findItems(app_name, QtCore.Qt.MatchExactly)
+							
+							if not items:  # If item doesn't exist, add new row
+								row = self.ui.tablewidget_Maintenance_4.rowCount()
+								self.ui.tablewidget_Maintenance_4.setRowCount(row + 1)
+								
+								# Get current timestamp
+								current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+								
+								# Set table items based on your column structure
+								self.ui.tablewidget_Maintenance_4.setItem(row, 0, QtWidgets.QTableWidgetItem(current_time))  # Time
+								self.ui.tablewidget_Maintenance_4.setItem(row, 1, QtWidgets.QTableWidgetItem(app_pid))       # PID
+								self.ui.tablewidget_Maintenance_4.setItem(row, 2, QtWidgets.QTableWidgetItem(app_name))      # Application Name
+								self.ui.tablewidget_Maintenance_4.setItem(row, 3, QtWidgets.QTableWidgetItem(app_status))    # Status
+								self.ui.tablewidget_Maintenance_4.setItem(row, 4, QtWidgets.QTableWidgetItem(app_mem))       # Memory Utilization in MB
+								self.ui.tablewidget_Maintenance_4.setItem(row, 5, QtWidgets.QTableWidgetItem(app_cpu_usage)) # CPU Utilization %
+								
+				except Exception as e:
+					print(f"Error populating maintenance table: {e}")
+
+	def display_dashboard(self):
+		try:
+			# Clear existing rows
+			self.ui.tablewidget_Trip_2.setRowCount(0)
+			
+			# Get application data from tags
+			app_names_psman = []
+			app_status_psman = []
+			GetTagArrayData("Obj1.Application_Info.application_name_psman", app_names_psman)
+			GetTagArrayData("Obj1.Application_Info.application_status_psman", app_status_psman)
+			
+			# Populate the table with modules information and status
+			for idx, app_name in enumerate(app_names_psman):
+				row = self.ui.tablewidget_Trip_2.rowCount()
+				self.ui.tablewidget_Trip_2.setRowCount(row + 1)
+				
+				# Column 0: Modules Information (Application Name)
+				self.ui.tablewidget_Trip_2.setItem(row, 0, QtWidgets.QTableWidgetItem(app_name))
+				
+				# Column 1: Status
+				status = app_status_psman[idx] if idx < len(app_status_psman) else "unknown"
+				self.ui.tablewidget_Trip_2.setItem(row, 1, QtWidgets.QTableWidgetItem(status))
+				
+		except Exception as e:
+			print(f"Error populating PSMan applications table: {e}")
+
+	def display_network(self):
+		try:
+			# Clear existing rows
+			self.ui.tablewidget_Maintenance_10.setRowCount(0)
+			# Get network interface data from tags
+			active_interfaces = []
+			active_interfaces_status = []
+			GetTagArrayData("Obj1.Network_Info.active_interfaces", active_interfaces)
+			GetTagArrayData("Obj1.Network_Info.active_interfaces_status", active_interfaces_status)
+			# Populate the table with interface name and status
+			for idx, iface in enumerate(active_interfaces):
+				row = self.ui.tablewidget_Maintenance_10.rowCount()
+				self.ui.tablewidget_Maintenance_10.setRowCount(row + 1)
+				self.ui.tablewidget_Maintenance_10.setItem(row, 0, QtWidgets.QTableWidgetItem(iface))   # Interface Name
+				status = active_interfaces_status[idx] if idx < len(active_interfaces_status) else "unknown"
+				self.ui.tablewidget_Maintenance_10.setItem(row, 1, QtWidgets.QTableWidgetItem(status))  # Status (active/inactive)
+		except Exception as e:
+			print(f"Error populating maintenance table: {e}")
+
+	def display_server_infra_1(self):
+		try:
+			# Clear existing rows
+			self.ui.tablewidget_Maintenance_8.setRowCount(0)
+			
+			# Get drive data from arrays using GetTagArrayData
+			drive_names = []
+			drive_total_spaces = []
+			drive_used_spaces = []
+			drive_free_spaces = []
+			drive_usage_percentages = []
+			
+			GetTagArrayData("Obj1.Server_Infra.drive_names", drive_names)
+			GetTagArrayData("Obj1.Server_Infra.drive_total_space_gb", drive_total_spaces)
+			GetTagArrayData("Obj1.Server_Infra.drive_used_space_gb", drive_used_spaces)
+			GetTagArrayData("Obj1.Server_Infra.drive_free_space_gb", drive_free_spaces)
+			GetTagArrayData("Obj1.Server_Infra.drive_usage_percent", drive_usage_percentages)
+			
+			if len(drive_names) > 0:
+				for index in range(len(drive_names)):
+					drive_name = drive_names[index]
+					total_space = str(drive_total_spaces[index])
+					used_space = str(drive_used_spaces[index])
+					free_space = str(drive_free_spaces[index])
+					usage_percent = str(drive_usage_percentages[index])
+					
+					# Check if item already exists in table
+					items = self.ui.tablewidget_Maintenance_8.findItems(drive_name, QtCore.Qt.MatchExactly)
+					
+					if not items:  # If item doesn't exist, add new row
+						row = self.ui.tablewidget_Maintenance_8.rowCount()
+						self.ui.tablewidget_Maintenance_8.setRowCount(row + 1)
+						
+						# Set table items based on your column structure
+						self.ui.tablewidget_Maintenance_8.setItem(row, 0, QtWidgets.QTableWidgetItem(drive_name))         # Drive Name
+						self.ui.tablewidget_Maintenance_8.setItem(row, 1, QtWidgets.QTableWidgetItem(total_space))       # Total Space (GB)
+						self.ui.tablewidget_Maintenance_8.setItem(row, 2, QtWidgets.QTableWidgetItem(used_space))        # Used Space (GB)
+						self.ui.tablewidget_Maintenance_8.setItem(row, 3, QtWidgets.QTableWidgetItem(free_space))        # New Column (Free Space GB)
+						self.ui.tablewidget_Maintenance_8.setItem(row, 4, QtWidgets.QTableWidgetItem(f"{usage_percent}%")) # Usage (%)
+			else:
+				print("No drive information available to populate table")
+				
+		except Exception as e:
+			print(f"Error populating drive information table: {e}")
+
+	def display_server_infra_2(self):
+		try:
+			# Clear existing rows
+			self.ui.tablewidget_Maintenance_6.setRowCount(0)
+			
+			# Get server infrastructure data from tags
+			try:
+				cpu_per_core = create_string_buffer(1024)
+				cpu_logical_cores = c_int(0)
+				cpu_physical_cores = c_int(0)
+				cpu_cores_used = c_int(0)
+				
+				# Use individual TagGetValue calls
+				TagGetValue("Obj1.Server_Infra.cpu_per_core", cpu_per_core)
+				TagGetValue("Obj1.Server_Infra.cpu_logical_cores", byref(cpu_logical_cores))
+				TagGetValue("Obj1.Server_Infra.cpu_physical_cores", byref(cpu_physical_cores))
+				TagGetValue("Obj1.Server_Infra.cpu_cores_being_used", byref(cpu_cores_used))
+				
+				# Convert buffer values to strings
+				cpu_per_core_str = cpu_per_core.value.decode()
+				
+				# For integer values, use .value directly (similar to iPort.value in Updatevalues)
+				cpu_logical_cores_str = str(cpu_logical_cores.value)
+				cpu_physical_cores_str = str(cpu_physical_cores.value)
+				cpu_cores_used_str = str(cpu_cores_used.value)
+				
+				# Set table to have one row for the server infrastructure data
+				self.ui.tablewidget_Maintenance_6.setRowCount(1)
+				
+				# Populate the table with the data
+				# Assuming columns are: CPU per Core, CPU Logical Cores, CPU Physical Cores, CPU Cores Being Used
+				self.ui.tablewidget_Maintenance_6.setItem(0, 0, QtWidgets.QTableWidgetItem(cpu_per_core_str))
+				self.ui.tablewidget_Maintenance_6.setItem(0, 1, QtWidgets.QTableWidgetItem(cpu_logical_cores_str))
+				self.ui.tablewidget_Maintenance_6.setItem(0, 2, QtWidgets.QTableWidgetItem(cpu_physical_cores_str))
+				self.ui.tablewidget_Maintenance_6.setItem(0, 3, QtWidgets.QTableWidgetItem(cpu_cores_used_str))
+				
+			except Exception as tag_error:
+				print(f"Error retrieving tag data: {tag_error}")
+				# You might want to populate with error messages or default values
+				self.ui.tablewidget_Maintenance_6.setRowCount(1)
+				
+				for col in range(4):
+					self.ui.tablewidget_Maintenance_6.setItem(0, col, QtWidgets.QTableWidgetItem("Error retrieving data"))
+			
+		except Exception as e:
+			print(f"Error populating Server Infrastructure table: {e}")
+			# Handle the error appropriately for your application
+
+if __name__ == '__main__':
+	app = LTApplication(sys.argv);
+	ex = widgetUI();
+	ex.show();
+	sys.exit(app.exec_())
